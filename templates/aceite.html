@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Contrato — Concordância</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    :root {
+      --rosa-bg: #ffe6f0;
+      --rosa-prim: #ff3399;
+      --rosa-borda: #ff99cc;
+      --rosa-chip: #ffe1ef;
+      --texto: #333;
+      --muted: #666;
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: var(--rosa-bg);
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--texto);
+    }
+
+    .container {
+      background: #fff;
+      width: 620px;
+      max-width: 95vw;
+      height: 600px;
+      padding: 32px;
+      border-radius: 14px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, .12);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .ident {
+      display: flex;
+      flex-direction: column;
+      gap: 4px
+    }
+
+    .ident p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px
+    }
+
+    #nomeUsuario,
+    #gmailUsuario {
+      font-size: 18px
+    }
+
+    /* PDF container */
+    .pdf-container {
+      width: 100%;
+      height: 45vh;
+      border: 1px solid var(--rosa-borda);
+      border-radius: 10px;
+      overflow: auto;
+      background: #fff;
+    }
+
+    .pdf-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
+    /* Concordância */
+    .agree-row {
+      display: flex;
+      align-items: center;
+      gap: 10px
+    }
+
+    .agree-row input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--rosa-prim)
+    }
+
+    /* Botões */
+    .actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end
+    }
+
+    .btn {
+      background: var(--rosa-prim);
+      color: #fff;
+      border: none;
+      padding: 12px 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px
+    }
+
+    .btn:disabled {
+      opacity: .55;
+      cursor: not-allowed
+    }
+
+    /* Mensagens */
+    .msg {
+      font-size: 13px;
+      color: var(--muted)
+    }
+
+    .ok {
+      color: #2a7a2a
+    }
+
+    .err {
+      color: #a00
+    }
+
+    .logo-digital {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-digital img {
+      height: 15vh;
+      width: 15vh;
+      border: 2px solid #ff3399;
+      border-radius: 50%;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <div class="logo-digital">
+      <img src="https://images.sympla.com.br/63d17e881930f-xs.png" alt="logo digital">
+    </div>
+
+    <!-- Nome e e-mail -->
+    <div class="ident">
+      <p id="nomeUsuario"><strong>Nome:</strong> {{ nome }}</p>
+      <p id="gmailUsuario"><strong>E-mail:</strong> {{ email }}</p>
+    </div>
+
+    <!-- PDF -->
+    <div class="pdf-container">
+      {% if pdf_base64 %}
+      <iframe src="data:application/pdf;base64,{{ pdf_base64 | safe }}#toolbar=0&navpanes=0&scrollbar=0"></iframe>
+      {% else %}
+      <p style="padding:12px">PDF não disponível.</p>
+      {% endif %}
+    </div>
+
+    <!-- Li e concordo -->
+    <div class="agree-row">
+      <input type="checkbox" id="concordo" />
+      <label for="concordo">Li e <b>concordo</b> com os termos do contrato</label>
+    </div>
+
+    <!-- Botão enviar -->
+    <div class="actions">
+      <button id="btnEnviar" class="btn" disabled>Enviar contrato</button>
+    </div>
+
+    <div id="msg" class="msg"></div>
+  </div>
+
+  <script>
+    const concordo = document.getElementById('concordo');
+    const btnEnviar = document.getElementById('btnEnviar');
+    const msg = document.getElementById('msg');
+    const nomeEl = document.getElementById('nomeUsuario');
+    const emailEl = document.getElementById('gmailUsuario');
+    const qs = new URLSearchParams(location.search);
+    const token = (qs.get('token') || '').trim();
+
+    // Habilita o botão apenas se checkbox marcado
+    concordo.addEventListener('change', () => {
+      btnEnviar.disabled = !concordo.checked;
+    });
+
+    // Envio
+    btnEnviar.addEventListener('click', async () => {
+      msg.className = 'msg'; msg.textContent = 'Enviando...';
+
+      const nome = (nomeEl.textContent || '').replace(/^Nome:\s*/i, '').trim();
+      const email = (emailEl.textContent || '').replace(/^E-mail:\s*/i, '').trim();
+
+      const payload = {
+        token,
+        status: concordo.checked ? 'accepted' : 'declined',
+        concordou: !!concordo.checked,
+        nome, email,
+        timestamp: new Date().toISOString()
+      };
+
+      try {
+        const res = await fetch(window.location.href, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (!res.ok) throw new Error('Falha no servidor');
+        msg.className = 'msg ok';
+        msg.textContent = 'Registro enviado com sucesso.';
+        btnEnviar.disabled = true;
+        concordo.disabled = true;
+      } catch (e) {
+        console.error(e);
+        msg.className = 'msg err';
+        msg.textContent = 'Erro ao enviar registro.';
+      }
+    });
+  </script>
+</body>
+
+</html>
