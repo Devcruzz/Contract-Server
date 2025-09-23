@@ -3,6 +3,7 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 from datetime import datetime
 import os
+import pytz 
 
 app = Flask(__name__)
 
@@ -33,12 +34,19 @@ def aceite():
     status = row["status"]
     pdf_base64 = row["pdf_base64"]
 
+    # Fuso horário de Brasília
+    brasilia_tz = pytz.timezone('America/Sao_Paulo')
+
+    # No lugar de datetime.now()
+    hora_agora = datetime.now(brasilia_tz)
+
+
     # Atualiza status para 'aceito' se o usuário enviar POST
     if request.method == "POST" and status != "aceito":
         ip = request.headers.get('X-Forwarded-For', request.remote_addr).split(',')[0].strip()
         cur.execute(
             "UPDATE aceite SET status = 'aceito', data_hora = %s, ip = %s WHERE id = %s",
-            (datetime.now(), ip, user_id)
+            (hora_agora, ip, user_id)
         )
         conn.commit()
         status = "aceito"
