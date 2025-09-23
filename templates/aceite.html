@@ -2,229 +2,185 @@
 <html lang="pt-BR">
 
 <head>
-  <meta charset="UTF-8" />
-  <title>Contrato — Concordância</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <style>
-    :root {
-      --rosa-bg: #ffe6f0;
-      --rosa-prim: #ff3399;
-      --rosa-borda: #ff99cc;
-      --rosa-chip: #ffe1ef;
-      --texto: #333;
-      --muted: #666;
-    }
+    <meta charset="UTF-8">
+    <title>Visualização de Contrato</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #ffe6f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
 
-    * {
-      box-sizing: border-box
-    }
+        .container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 16px;
+            width: 520px;
+            height: 550px;
+            max-width: 95vw;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
 
-    body {
-      font-family: Arial, sans-serif;
-      background: var(--rosa-bg);
-      min-height: 100vh;
-      margin: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--texto);
-    }
+        h1 {
+            margin-top: -10px;
+            font-size: 26px;
+            color: #222;
+            margin-bottom: -10px;
+            word-break: break-word;
+        }
 
-    .container {
-      background: #fff;
-      width: 620px;
-      max-width: 95vw;
-      height: 600px;
-      padding: 32px;
-      border-radius: 14px;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, .12);
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
+        p {
+            font-size: 16px;
+            color: #555;
+            word-break: break-word;
+        }
 
-    .ident {
-      display: flex;
-      flex-direction: column;
-      gap: 4px
-    }
+        .pdf-container {
+            width: 100%;
+            height: 350px;
+            border-radius: 12px;
+            border: 1px solid #ccc;
+            overflow: auto;
+            background: #fafafa;
+        }
 
-    .ident p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 14px
-    }
+        .pdf-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 12px;
+        }
 
-    #nomeUsuario,
-    #gmailUsuario {
-      font-size: 18px
-    }
+        .agree-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
 
-    /* PDF container */
-    .pdf-container {
-      width: 100%;
-      height: 45vh;
-      border: 1px solid var(--rosa-borda);
-      border-radius: 10px;
-      overflow: auto;
-      background: #fff;
-    }
+        .btn {
+            background: #ff3399;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
 
-    .pdf-container iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-      display: block;
-    }
+        .btn:disabled {
+            background: #e470ac;
+            cursor: not-allowed;
+        }
 
-    /* Concordância */
-    .agree-row {
-      display: flex;
-      align-items: center;
-      gap: 10px
-    }
+        .logo-digital {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-    .agree-row input {
-      width: 18px;
-      height: 18px;
-      accent-color: var(--rosa-prim)
-    }
+        .logo-digital img {
+            height: 15vh;
+            width: 15vh;
+            border: 2px solid #ff3399;
+            border-radius: 50%;
+        }
 
-    /* Botões */
-    .actions {
-      display: flex;
-      gap: 8px;
-      justify-content: flex-end
-    }
+        /* ===== Responsividade ===== */
+        @media (max-width: 600px) {
+            .container {
+                width: 100%;
+                height: auto;
+                padding: 20px;
+                gap: 16px;
+            }
 
-    .btn {
-      background: var(--rosa-prim);
-      color: #fff;
-      border: none;
-      padding: 12px 16px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 14px
-    }
+            #nomeUsuario,
+            #gmailUsuario {
+                font-size: 16px;
+            }
 
-    .btn:disabled {
-      opacity: .55;
-      cursor: not-allowed
-    }
+            .pdf-container {
+                height: 55vh;
+            }
 
-    /* Mensagens */
-    .msg {
-      font-size: 13px;
-      color: var(--muted)
-    }
+            .btn {
+                width: 100%;
+                font-size: 15px;
+            }
 
-    .ok {
-      color: #2a7a2a
-    }
+            .actions {
+                justify-content: center;
+                flex-direction: column;
+                gap: 10px;
+            }
 
-    .err {
-      color: #a00
-    }
+            .agree-row {
+                align-items: flex-start;
+                font-size: 14px;
+            }
 
-    .logo-digital {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .logo-digital img {
-      height: 15vh;
-      width: 15vh;
-      border: 2px solid #ff3399;
-      border-radius: 50%;
-    }
-  </style>
+            .logo-digital img {
+                height: 100px;
+                width: 100px;
+            }
+        }
+    </style>
 </head>
 
 <body>
-  <div class="container">
+    <div class="container">
+        <div class="logo-digital">
+            <img src="https://images.sympla.com.br/63d17e881930f-xs.png" alt="logo digital">
+        </div>
 
-    <div class="logo-digital">
-      <img src="https://images.sympla.com.br/63d17e881930f-xs.png" alt="logo digital">
+        <h1>{{ nome }}</h1>
+        <p>{{ email }}</p>
+
+        <div class="pdf-container">
+            {% if pdf_base64 %}
+            <iframe src="data:application/pdf;base64,{{ pdf_base64 | safe }}#toolbar=0&navpanes=0&scrollbar=0"
+                style="width:100%; height:90vh; border:none;">
+            </iframe>
+            {% else %}
+            <p>PDF não disponível.</p>
+            {% endif %}
+        </div>
+
+
+        <div class="agree-row">
+            <input type="checkbox" id="concordo">
+            <label for="concordo">Li e concordo com os termos do contrato</label>
+        </div>
+
+        <div class="actions">
+            <button id="enviarBtn" class="btn" disabled>Enviar</button>
+        </div>
     </div>
 
-    <!-- Nome e e-mail -->
-    <div class="ident">
-      <p id="nomeUsuario"><strong>Nome:</strong> {{ nome }}</p>
-      <p id="gmailUsuario"><strong>E-mail:</strong> {{ email }}</p>
-    </div>
+    <script>
+        const concordo = document.getElementById('concordo');
+        const enviarBtn = document.getElementById('enviarBtn');
 
-    <!-- PDF -->
-    <div class="pdf-container">
-      {% if pdf_base64 %}
-      <iframe src="data:application/pdf;base64,{{ pdf_base64 | safe }}#toolbar=0&navpanes=0&scrollbar=0"></iframe>
-      {% else %}
-      <p style="padding:12px">PDF não disponível.</p>
-      {% endif %}
-    </div>
-
-    <!-- Li e concordo -->
-    <div class="agree-row">
-      <input type="checkbox" id="concordo" />
-      <label for="concordo">Li e <b>concordo</b> com os termos do contrato</label>
-    </div>
-
-    <!-- Botão enviar -->
-    <div class="actions">
-      <button id="btnEnviar" class="btn" disabled>Enviar contrato</button>
-    </div>
-
-    <div id="msg" class="msg"></div>
-  </div>
-
-  <script>
-    const concordo = document.getElementById('concordo');
-    const btnEnviar = document.getElementById('btnEnviar');
-    const msg = document.getElementById('msg');
-    const nomeEl = document.getElementById('nomeUsuario');
-    const emailEl = document.getElementById('gmailUsuario');
-    const qs = new URLSearchParams(location.search);
-    const token = (qs.get('token') || '').trim();
-
-    // Habilita o botão apenas se checkbox marcado
-    concordo.addEventListener('change', () => {
-      btnEnviar.disabled = !concordo.checked;
-    });
-
-    // Envio
-    btnEnviar.addEventListener('click', async () => {
-      msg.className = 'msg'; msg.textContent = 'Enviando...';
-
-      const nome = (nomeEl.textContent || '').replace(/^Nome:\s*/i, '').trim();
-      const email = (emailEl.textContent || '').replace(/^E-mail:\s*/i, '').trim();
-
-      const payload = {
-        token,
-        status: concordo.checked ? 'accepted' : 'declined',
-        concordou: !!concordo.checked,
-        nome, email,
-        timestamp: new Date().toISOString()
-      };
-
-      try {
-        const res = await fetch(window.location.href, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
+        concordo.addEventListener('change', () => {
+            enviarBtn.disabled = !concordo.checked;
         });
-        if (!res.ok) throw new Error('Falha no servidor');
-        msg.className = 'msg ok';
-        msg.textContent = 'Registro enviado com sucesso.';
-        btnEnviar.disabled = true;
-        concordo.disabled = true;
-      } catch (e) {
-        console.error(e);
-        msg.className = 'msg err';
-        msg.textContent = 'Erro ao enviar registro.';
-      }
-    });
-  </script>
+
+        enviarBtn.addEventListener('click', async () => {
+            const response = await fetch(window.location.href, { method: 'POST' });
+            if (response.ok) alert('Aceite registrado com sucesso!');
+            enviarBtn.disabled = true;
+            concordo.disabled = true;
+        });
+    </script>
 </body>
 
 </html>
