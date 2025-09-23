@@ -2,8 +2,8 @@ from flask import Flask, request, render_template
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from datetime import datetime
+import pytz
 import os
-import pytz 
 
 app = Flask(__name__)
 
@@ -37,27 +37,31 @@ def aceite():
     # Fuso horário de Brasília
     brasilia_tz = pytz.timezone('America/Sao_Paulo')
 
-    # No lugar de datetime.now()
-    hora_agora = datetime.now(brasilia_tz)
-
+    # Hora atual com fuso horário de Brasília
+    hora_agora_brasilia = datetime.now(brasilia_tz)
 
     # Atualiza status para 'aceito' se o usuário enviar POST
     if request.method == "POST" and status != "aceito":
         ip = request.headers.get('X-Forwarded-For', request.remote_addr).split(',')[0].strip()
+        
+        # Converte para UTC antes de salvar no banco
+        hora_agora_utc = hora_agora_brasilia.astimezone(pytz.utc)
+
         cur.execute(
             "UPDATE aceite SET status = 'aceito', data_hora = %s, ip = %s WHERE id = %s",
-            (hora_agora, ip, user_id)
+            (hora_agora_utc, ip, user_id)
         )
         conn.commit()
         status = "aceito"
 
     conn.close()
-    
+
     # Passa o PDF Base64 para o template
     return render_template(
         "aceite.html",
         nome=nome,
         email=email,
         status=status,
-        pdf_base64=pdf_base64
+        pdf_base64=pdf_base64,
+        hora_agora=hora_agora_brasilia.strftime("%d/%m/%Y %H:%M:%S")  # só pra exibir se quiser
     )
