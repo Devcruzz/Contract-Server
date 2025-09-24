@@ -32,7 +32,7 @@ def aceite():
     nome = row["nome"]
     email = row["email"]
     status = row["status"]
-    pdf_base64 = row["pdf_base64"]
+    pdf_base64 = row["pdf_base64"] or ""
 
     # Fuso horário de Brasília
     brasilia_tz = pytz.timezone('America/Sao_Paulo')
