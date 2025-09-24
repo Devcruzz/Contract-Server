@@ -29,10 +29,9 @@
         }
 
         h1 {
-            margin-top: -10px;
+            margin: -10px 0;
             font-size: 26px;
             color: #222;
-            margin-bottom: -10px;
             word-break: break-word;
         }
 
@@ -87,44 +86,11 @@
             border-radius: 50%;
         }
 
-        /* ===== Responsividade ===== */
         @media (max-width: 600px) {
-            .container {
-                width: 100%;
-                height: auto;
-                padding: 20px;
-                gap: 16px;
-            }
-
-            #nomeUsuario,
-            #gmailUsuario {
-                font-size: 16px;
-            }
-
-            .pdf-container {
-                height: 55vh;
-            }
-
-            .btn {
-                width: 100%;
-                font-size: 15px;
-            }
-
-            .actions {
-                justify-content: center;
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .agree-row {
-                align-items: flex-start;
-                font-size: 14px;
-            }
-
-            .logo-digital img {
-                height: 100px;
-                width: 100px;
-            }
+            .container { width: 100%; padding: 20px; gap: 16px; }
+            .pdf-container { height: 55vh; }
+            .btn { width: 100%; font-size: 15px; }
+            .logo-digital img { height: 100px; width: 100px; }
         }
     </style>
 </head>
@@ -172,23 +138,22 @@
             concordo.disabled = true;
         });
 
-        // ===== Renderizar PDF com PDF.js =====
+        // Renderiza PDF se houver base64
         {% if pdf_base64 %}
-        const pdfData = atob('{{ pdf_base64 | safe }}'); // decodifica base64
-        const loadingTask = pdfjsLib.getDocument({ data: pdfData });
+        const pdfData = Uint8Array.from(atob('{{ pdf_base64 | safe }}'), c => c.charCodeAt(0));
         const pdfViewer = document.getElementById('pdf-viewer');
 
-        loadingTask.promise.then(pdf => {
+        pdfjsLib.getDocument({ data: pdfData }).promise.then(pdf => {
             for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
                 pdf.getPage(pageNum).then(page => {
                     const scale = 1.2;
                     const viewport = page.getViewport({ scale });
                     const canvas = document.createElement('canvas');
-                    canvas.style.display = 'block';
-                    canvas.style.margin = '10px auto';
                     const context = canvas.getContext('2d');
                     canvas.height = viewport.height;
                     canvas.width = viewport.width;
+                    canvas.style.display = 'block';
+                    canvas.style.margin = '10px auto';
                     pdfViewer.appendChild(canvas);
                     page.render({ canvasContext: context, viewport: viewport });
                 });
@@ -200,5 +165,4 @@
         {% endif %}
     </script>
 </body>
-
 </html>
