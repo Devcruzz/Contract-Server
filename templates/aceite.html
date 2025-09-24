@@ -20,7 +20,6 @@
             padding: 30px;
             border-radius: 16px;
             width: 520px;
-            height: 550px;
             max-width: 95vw;
             display: flex;
             flex-direction: column;
@@ -43,20 +42,14 @@
             word-break: break-word;
         }
 
-        .pdf-container {
+        .contract-container {
             width: 100%;
-            height: 350px;
             border-radius: 12px;
             border: 1px solid #ccc;
-            overflow: auto;
+            padding: 10px;
             background: #fafafa;
-        }
-
-        .pdf-container iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            border-radius: 12px;
+            overflow: auto;
+            max-height: 400px;
         }
 
         .agree-row {
@@ -94,7 +87,6 @@
             border-radius: 50%;
         }
 
-        /* ===== Responsividade ===== */
         @media (max-width: 600px) {
             .container {
                 width: 100%;
@@ -103,13 +95,8 @@
                 gap: 16px;
             }
 
-            #nomeUsuario,
-            #gmailUsuario {
-                font-size: 16px;
-            }
-
-            .pdf-container {
-                height: 55vh;
+            .contract-container {
+                max-height: 55vh;
             }
 
             .btn {
@@ -117,14 +104,7 @@
                 font-size: 15px;
             }
 
-            .actions {
-                justify-content: center;
-                flex-direction: column;
-                gap: 10px;
-            }
-
             .agree-row {
-                align-items: flex-start;
                 font-size: 14px;
             }
 
@@ -145,36 +125,37 @@
         <h1>{{ nome }}</h1>
         <p>{{ email }}</p>
 
-        <div class="pdf-container">
-            {% if pdf_base64 %}
-            <iframe src="data:application/pdf;base64,{{ pdf_base64 | safe }}#toolbar=0&navpanes=0&scrollbar=0"
-                style="width:100%; height:90vh; border:none;">
-            </iframe>
+        <div class="contract-container">
+            {% if contrato_html %}
+                {{ contrato_html|safe }}
             {% else %}
-            <p>PDF não disponível.</p>
+                <p>Contrato não disponível.</p>
             {% endif %}
         </div>
 
-
         <div class="agree-row">
-            <input type="checkbox" id="concordo">
+            <input type="checkbox" id="concordo" {% if status == 'aceito' %}disabled{% endif %}>
             <label for="concordo">Li e concordo com os termos do contrato</label>
         </div>
 
         <div class="actions">
-            <button id="enviarBtn" class="btn" disabled>Enviar</button>
+            <button id="enviarBtn" class="btn" {% if status == 'aceito' %}disabled{% endif %}>Enviar</button>
         </div>
+
+        {% if status == 'aceito' %}
+            <p style="color:green;">Contrato aceito!</p>
+        {% endif %}
     </div>
 
     <script>
         const concordo = document.getElementById('concordo');
         const enviarBtn = document.getElementById('enviarBtn');
 
-        concordo.addEventListener('change', () => {
+        concordo?.addEventListener('change', () => {
             enviarBtn.disabled = !concordo.checked;
         });
 
-        enviarBtn.addEventListener('click', async () => {
+        enviarBtn?.addEventListener('click', async () => {
             const response = await fetch(window.location.href, { method: 'POST' });
             if (response.ok) alert('Aceite registrado com sucesso!');
             enviarBtn.disabled = true;
@@ -182,5 +163,4 @@
         });
     </script>
 </body>
-
 </html>
