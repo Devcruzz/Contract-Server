@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, redirect, url_for
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from datetime import datetime
@@ -50,7 +50,10 @@ def aceite():
             (hora_agora_utc, ip, user_id)
         )
         conn.commit()
-        status = "aceito"
+        conn.close()
+
+        # Redireciona para página de agradecimento
+        return redirect(url_for("obrigado"))
 
     conn.close()
 
@@ -63,3 +66,7 @@ def aceite():
         contrato_html=contrato_html,
         hora_agora=hora_agora_brasilia.strftime("%d/%m/%Y %H:%M:%S")
     )
+
+@app.route("/obrigado")
+def obrigado():
+    return render_template("obrigado.html")

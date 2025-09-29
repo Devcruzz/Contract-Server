@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+    <meta charset="UTF-8">
+    <title>Obrigado pelo envio</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #ffe6f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 10px;
+        }
+
+        .container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2rem;
+            color: #222;
+        }
+
+        p {
+            font-size: 1rem;
+            color: #555;
+            margin: 5px 0;
+        }
+
+        .logo-digital img {
+            height: 100px;
+            width: 100px;
+            border: 2px solid #ff3399;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .btn {
+            background: #ff3399;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background: #e6007a;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                gap: 15px;
+            }
+
+            h1 {
+                font-size: 1.6rem;
+            }
+
+            p {
+                font-size: 0.9rem;
+            }
+
+            .logo-digital img {
+                height: 80px;
+                width: 80px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+                gap: 12px;
+            }
+
+            h1 {
+                font-size: 1.3rem;
+            }
+
+            p {
+                font-size: 0.85rem;
+            }
+
+            .logo-digital img {
+                height: 70px;
+                width: 70px;
+            }
+
+            .btn {
+                width: 100%;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo-digital">
+            <img src="https://images.sympla.com.br/63d17e881930f-xs.png" alt="logo digital">
+        </div>
+
+        <h1>Obrigado pelo envio!</h1>
+        <p>Seu contrato foi registrado com sucesso.</p>
+
+        <a href="/" class="btn">Voltar para a página inicial</a>
+    </div>
+</body>
+</html>

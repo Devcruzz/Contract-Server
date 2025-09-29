@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <head>
     <meta charset="UTF-8">
     <title>Visualização de Contrato</title>
@@ -17,7 +18,8 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            overflow: hidden; /* página não rola */
+            overflow: hidden;
+            /* página não rola */
             padding: 10px;
         }
 
@@ -27,7 +29,8 @@
             border-radius: 16px;
             width: 100%;
             max-width: 600px;
-            height: 90vh; /* container fixo na tela */
+            height: 90vh;
+            /* container fixo na tela */
             display: flex;
             flex-direction: column;
             gap: 15px;
@@ -50,12 +53,14 @@
 
         .contract-container {
             width: 100%;
-            height: 60%; /* altura fixa da área do contrato */
+            height: 60%;
+            /* altura fixa da área do contrato */
             border-radius: 12px;
             border: 1px solid #ccc;
             padding: 10px;
             background: #fafafa;
-            overflow-y: auto; /* só o contrato rola */
+            overflow-y: auto;
+            /* só o contrato rola */
         }
 
         .agree-row {
@@ -114,7 +119,8 @@
             }
 
             .contract-container {
-                height: 55%; /* altura ajustada para tablet */
+                height: 55%;
+                /* altura ajustada para tablet */
             }
 
             .btn {
@@ -144,7 +150,8 @@
             }
 
             .contract-container {
-                height: 50%; /* altura ajustada para celular */
+                height: 50%;
+                /* altura ajustada para celular */
             }
 
             .agree-row {
@@ -206,10 +213,12 @@
 
         enviarBtn?.addEventListener('click', async () => {
             const response = await fetch(window.location.href, { method: 'POST' });
-            if (response.ok) alert('Aceite registrado com sucesso!');
-            enviarBtn.disabled = true;
-            concordo.disabled = true;
+            if (response.ok) {
+                window.location.href = "/obrigado"; // redireciona
+            }
         });
+
     </script>
 </body>
+
 </html>
