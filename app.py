@@ -40,8 +40,13 @@ def aceite():
     brasilia_tz = pytz.timezone('America/Sao_Paulo')
     hora_agora_brasilia = datetime.now(brasilia_tz)
 
+    # 🚨 Se já aceitou antes → manda direto para obrigado
+    if status == "aceito":
+        conn.close()
+        return redirect(url_for("obrigado"))
+
     # Atualiza status para 'aceito' se o usuário enviar POST
-    if request.method == "POST" and status != "aceito":
+    if request.method == "POST":
         ip = request.headers.get('X-Forwarded-For', request.remote_addr).split(',')[0].strip()
         hora_agora_utc = hora_agora_brasilia.astimezone(pytz.utc)
 
@@ -52,12 +57,11 @@ def aceite():
         conn.commit()
         conn.close()
 
-        # Redireciona para página de agradecimento
         return redirect(url_for("obrigado"))
 
     conn.close()
 
-    # Renderiza o template 'aceite.html'
+    # Renderiza o template 'aceite.html' (somente se não aceitou ainda)
     return render_template(
         "aceite.html",
         nome=nome,
