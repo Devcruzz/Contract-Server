@@ -74,3 +74,8 @@ def aceite():
 @app.route("/obrigado")
 def obrigado():
     return render_template("obrigado.html")
+
+# 🚀 Rota para healthcheck (ping de keep-alive)
+@app.route("/health")
+def health():
+    return "OK", 200
